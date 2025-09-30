@@ -1,0 +1,77 @@
+---
+
+## 🔹 Member-1 → *Data Profiling & Preprocessing*
+
+*Kaam:* Dataset ka summary nikalna.
+*Steps:*
+
+1. Dataset read karna (pandas.read_csv("file.csv")).
+2. Rows/Columns count karna → df.shape.
+3. Data types check karna → df.dtypes.
+4. Missing values check → df.isnull().sum().
+5. Class imbalance check (agar target column hai) → df['target'].value_counts().
+6. Simple preprocessing suggestions likhna (jaise “Fill missing values”, “Label encode categorical data”).
+
+👉 Output: Ek dictionary ya JSON jisme dataset ka summary hoga.
+
+---
+
+## 🔹 Member-2 → *Algorithm Recommendation Logic*
+
+*Kaam:* Dataset ke features dekh kar best algorithm suggest karna.
+*Steps:*
+
+1. Profiling se output lena.
+2. Rules define karna:
+
+   * Agar dataset rows < 10k → Logistic Regression / Decision Tree.
+   * Agar dataset rows ≥ 10k → Random Forest / XGBoost.
+   * Agar target categorical hai → Classification algorithms.
+   * Agar target numeric hai → Regression algorithms.
+   * Agar imbalance hai → Sampling technique + suitable algorithm.
+3. Justification generate karna (short text).
+
+👉 Output: Ek string (Recommended Algorithm = “Random Forest”, Reason = “Dataset large & mixed features”).
+
+---
+
+## 🔹 Member-3 → *Report Generation*
+
+*Kaam:* User ko ek readable report dena.
+*Steps:*
+
+1. Dataset summary + recommended algorithm ko input lena.
+2. Report create karna:
+
+   * python-docx → Word file.
+   * reportlab → PDF.
+   * Simple graphs (matplotlib/seaborn) → e.g. class distribution pie chart.
+3. Report me sections:
+
+   * Dataset Overview (rows, columns, missing values).
+   * Algorithm Recommendation (name + short justification).
+   * Optional: Graphs (class balance, data types count).
+
+👉 Output: report.pdf ya report.docx file.
+
+---
+
+## 🔹 Member-4 → *Integration & Testing*
+
+*Kaam:* Sab modules ko ek end-to-end flow me connect karna.
+*Steps:*
+
+1. Member 1, 2, 3 ke code import karke ek main script banana (main.py).
+2. Flow:
+
+   * User dataset upload kare.
+   * Profiling run ho.
+   * Recommendation module run ho.
+   * Report generate ho.
+3. Testing with multiple datasets (small, large, balanced, imbalanced).
+4. Simple interface banana (optional):
+
+   * CLI: python main.py --file dataset.csv.
+   * Or Streamlit app: Upload dataset → Click button → Get recommendation + download report.
+
+👉 Output: Ek working pipeline jo start se end tak chale.

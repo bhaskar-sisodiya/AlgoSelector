@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit cache
+.streamlit/
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Data files (optional, if you don’t want raw/processed datasets in Git)
+data/
+*.csv
+*.tsv
+*.parquet
+
+# Model artifacts
+*.h5
+*.hdf5
+*.pkl
+*.joblib
