@@ -34,7 +34,8 @@ data/
 *.tsv
 *.parquet
 
-# Model artifacts
+# Model artifactsls
+
 *.h5
 *.hdf5
 *.pkl
