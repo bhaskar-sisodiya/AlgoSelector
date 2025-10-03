@@ -15,8 +15,12 @@ else:
     df = st.session_state.df
     st.success("Your dataset is ready! Here is our recommendation:")
 
+    # Get recommendation
     recommendation = recommend_algorithm(df, st.session_state.target_column, st.session_state.imbalance_ratio)
     
+    # Store in session_state for 3rd page
+    st.session_state.recommendation = recommendation
+
     st.markdown(f"""
     <div style="padding: 10px; border-radius: 5px; background-color: #f0f2f6;">
         <p style="font-size: 24px; font-weight: bold; margin: 0; color: #333333;">Recommended Algorithm</p>
