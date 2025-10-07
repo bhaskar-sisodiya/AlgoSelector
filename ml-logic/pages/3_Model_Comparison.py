@@ -1,24 +1,3 @@
-# # pages/3_Model_Comparison.py
-
-# import streamlit as st
-
-# st.title("3. Model Comparison & Report Generation")
-
-# if "df" not in st.session_state:
-#     st.warning("Please upload and process a dataset first.")
-# else:
-#     st.info("🛠️ This feature is under construction.")
-#     st.write("In the future, this page will:")
-#     st.markdown("""
-#     - Train the recommended algorithm along with two other strong candidates.
-#     - Display a comparison of their performance metrics (like Accuracy, F1-Score, R-squared, etc.).
-#     - Allow you to generate and download a performance report.
-#     """)
-
-
-
-# pages/3_Model_Comparison.py
-
 # pages/3_Model_Comparison.py
 
 import streamlit as st
@@ -27,8 +6,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from docx import Document
 from docx.shared import Inches
-from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+import os
 
 st.title("3. Model Comparison & Report Generation")
 
@@ -37,6 +18,7 @@ if "df" not in st.session_state:
     st.warning("Please upload and process a dataset first on the homepage.")
 else:
     df = st.session_state.df
+    target_col = st.session_state.target_column if "target_column" in st.session_state else None
 
     # Dataset Summary
     dataset_summary = {
@@ -49,6 +31,16 @@ else:
     for key, value in dataset_summary.items():
         st.write(f"**{key}:** {value}")
 
+    # Column Information
+    col_info = pd.DataFrame({
+        "Column Name": df.columns,
+        "Data Type": df.dtypes.astype(str),
+        "Unique Values": [df[col].nunique() for col in df.columns]
+    })
+
+    st.subheader("📑 Column Details")
+    st.dataframe(col_info)
+
     # Recommended Algorithm
     if "recommendation" in st.session_state:
         rec = st.session_state.recommendation
@@ -60,20 +52,23 @@ else:
             for reason in rec["reason_parts"]:
                 st.write(f"- {reason}")
 
-        # Class Distribution Pie Chart (Optional)
-        if df.shape[1] >= 1:
-            plt.figure(figsize=(4,4))
-            df[df.columns[0]].value_counts().plot.pie(
+        # Class Distribution Pie Chart (only for categorical target)
+        class_plot_path = None
+        if target_col and df[target_col].dtype in ['object', 'category', 'bool', 'int64'] and df[target_col].nunique() < 20:
+            class_plot_path = "class_distribution.png"
+            plt.figure(figsize=(4, 4))
+            df[target_col].value_counts().plot.pie(
                 autopct='%1.1f%%', colors=sns.color_palette('pastel')
             )
-            plt.title("Class Distribution")
+            plt.title(f"Class Distribution: {target_col}")
             plt.tight_layout()
-            plt.savefig("class_distribution.png")
+            plt.savefig(class_plot_path)
             plt.close()
-            st.image("class_distribution.png", caption="Class Distribution")
+            st.image(class_plot_path, caption="Class Distribution")
 
-        # Generate Word Report
+        # --- Word Report ---
         if st.button("📄 Generate Word Report"):
+            word_file = "AutoML_Report.docx"
             doc = Document()
             doc.add_heading("AutoML Report", 0)
 
@@ -81,36 +76,67 @@ else:
             for key, value in dataset_summary.items():
                 doc.add_paragraph(f"{key}: {value}")
 
+            doc.add_heading("Columns", level=1)
+            for _, row in col_info.iterrows():
+                doc.add_paragraph(f"{row['Column Name']} (Type: {row['Data Type']}, Unique: {row['Unique Values']})")
+
             doc.add_heading("Algorithm Recommendation", level=1)
             doc.add_paragraph(f"Algorithm: {rec['algorithm']}")
             doc.add_paragraph(f"Justification: {rec['simple_explanation']}")
 
-            if df.shape[1] >= 1:
+            if class_plot_path and os.path.exists(class_plot_path):
                 doc.add_heading("Graphs", level=1)
-                doc.add_picture("class_distribution.png", width=Inches(4))
+                doc.add_picture(class_plot_path, width=Inches(4))
 
-            doc.save("report.docx")
-            st.success("✅ Word report generated: report.docx")
+            doc.save(word_file)
+            st.success(f"✅ Word report generated: {word_file}")
+            with open(word_file, "rb") as f:
+                st.download_button(
+                    label="⬇️ Download Word Report",
+                    data=f,
+                    file_name=word_file,
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
 
-        # Generate PDF Report
+        # --- PDF Report ---
         if st.button("📑 Generate PDF Report"):
-            c = canvas.Canvas("report.pdf", pagesize=letter)
-            c.setFont("Helvetica-Bold", 16)
-            c.drawString(100, 750, "AutoML Report")
+            pdf_file = "AutoML_Report.pdf"
+            doc_pdf = SimpleDocTemplate(pdf_file, pagesize=letter)
+            styles = getSampleStyleSheet()
+            flowables = []
 
-            c.setFont("Helvetica", 12)
-            y = 720
+            flowables.append(Paragraph("AutoML Report", styles['Title']))
+            flowables.append(Spacer(1, 12))
+
+            flowables.append(Paragraph("Dataset Overview", styles['Heading2']))
             for key, value in dataset_summary.items():
-                c.drawString(100, y, f"{key}: {value}")
-                y -= 20
+                flowables.append(Paragraph(f"{key}: {value}", styles['Normal']))
+            flowables.append(Spacer(1, 12))
 
-            c.drawString(100, y-10, f"Recommended Algorithm: {rec['algorithm']}")
-            c.drawString(100, y-30, f"Justification: {rec['simple_explanation']}")
+            flowables.append(Paragraph("Columns", styles['Heading2']))
+            for _, row in col_info.iterrows():
+                flowables.append(Paragraph(f"{row['Column Name']} (Type: {row['Data Type']}, Unique: {row['Unique Values']})", styles['Normal']))
+            flowables.append(Spacer(1, 12))
 
-            if df.shape[1] >= 1:
-                c.drawImage("class_distribution.png", 100, y-250, width=200, height=200)
-            c.save()
-            st.success("✅ PDF report generated: report.pdf")
+            flowables.append(Paragraph("Algorithm Recommendation", styles['Heading2']))
+            flowables.append(Paragraph(f"Algorithm: {rec['algorithm']}", styles['Normal']))
+            flowables.append(Paragraph(f"Justification: {rec['simple_explanation']}", styles['Normal']))
+            flowables.append(Spacer(1, 12))
+
+            # Include class distribution chart if exists
+            if class_plot_path and os.path.exists(class_plot_path):
+                flowables.append(Paragraph("Class Distribution", styles['Heading2']))
+                flowables.append(Image(class_plot_path, width=200, height=200))
+
+            doc_pdf.build(flowables)
+            st.success(f"✅ PDF report generated: {pdf_file}")
+            with open(pdf_file, "rb") as f:
+                st.download_button(
+                    label="⬇️ Download PDF Report",
+                    data=f,
+                    file_name=pdf_file,
+                    mime="application/pdf"
+                )
 
     else:
         st.info("Please go to '2. Algorithm Recommendation' page to get the recommendation.")
