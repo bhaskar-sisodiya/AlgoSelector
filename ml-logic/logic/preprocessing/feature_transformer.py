@@ -1,27 +1,26 @@
-# ml-logic/preprocessing/feature_transformer.py
-
 from sklearn.preprocessing import LabelEncoder, StandardScaler
+import pandas as pd
+import numpy as np
 
 def encode_and_scale(df, categorical_cols, target_column):
     df_processed = df.copy()
 
-    # --- Step 1: Encode Categorical Columns (including the target if it's categorical) ---
-    le = LabelEncoder()
+    # --- Step 1: Encode Categorical Columns ---
     for col in categorical_cols:
-        # This will correctly handle feature columns like 'gender' or 'education'
-        # If the target is 'Yes'/'No', it will also be correctly encoded to 0/1
+        df_processed[col] = df_processed[col].astype(str)  # handle NaN as 'nan' strings safely
+        le = LabelEncoder()
         df_processed[col] = le.fit_transform(df_processed[col])
 
-    # --- Step 2: Scale ONLY the Numeric FEATURE Columns ---
-    
-    # Get all numeric columns
-    numeric_cols = df_processed.select_dtypes(include=['int64', 'float64']).columns
-    
-    # Create a list of feature columns to scale by EXCLUDING the target column
+    # --- Step 2: Encode Target Column if Categorical ---
+    if df_processed[target_column].dtype == 'object' or df_processed[target_column].dtype.name == 'category':
+        le_target = LabelEncoder()
+        df_processed[target_column] = le_target.fit_transform(df_processed[target_column].astype(str))
+
+    # --- Step 3: Scale Numeric Feature Columns ---
+    numeric_cols = df_processed.select_dtypes(include=[np.number]).columns
     features_to_scale = [col for col in numeric_cols if col != target_column]
-    
-    # Apply scaling only to the selected features
-    if features_to_scale: # Only run if there are numeric features to scale
+
+    if features_to_scale:
         scaler = StandardScaler()
         df_processed[features_to_scale] = scaler.fit_transform(df_processed[features_to_scale])
 

@@ -1,31 +1,48 @@
-# ml-logic/logic/selection/explanation_generator.py
-
-def get_explanation(algorithm, task_type, n_rows, is_imbalanced):
-    """Generates a simple, non-technical explanation for the algorithm choice."""
-    
-    explanation = ""
-
-    # Part 1: Define the goal based on task type
-    if task_type == "classification":
-        goal = "predicting a category (like 'Yes' or 'No')."
+def get_explanation(algo_name, task_type, n_rows, is_imbalanced):
+    if "Logistic Regression" in algo_name:
+        explanation = (
+            "Logistic Regression is a simple and interpretable algorithm best suited for "
+            "binary or multi-class classification tasks. It works well on smaller, linearly separable datasets."
+        )
+    elif "Random Forest" in algo_name:
+        explanation = (
+            "Random Forest is an ensemble of decision trees that captures complex, non-linear patterns. "
+            "It performs well on mixed-type data and requires minimal preprocessing."
+        )
+    elif "XGBoost" in algo_name:
+        explanation = (
+            "XGBoost is a gradient boosting algorithm optimized for speed and accuracy, "
+            "ideal for large datasets and high-stakes predictive modeling."
+        )
+    elif "LightGBM" in algo_name:
+        explanation = (
+            "LightGBM is similar to XGBoost but much faster on large datasets. "
+            "It’s best when you have millions of rows and need quick iteration."
+        )
+    elif "SVM" in algo_name:
+        explanation = (
+            "Support Vector Machines work well with high-dimensional small datasets "
+            "and can model complex boundaries using kernels."
+        )
+    elif "Linear Regression" in algo_name:
+        explanation = (
+            "Linear Regression models relationships assuming linearity. "
+            "It’s the best starting point for numeric prediction tasks with continuous targets."
+        )
+    elif "Decision Tree" in algo_name:
+        explanation = (
+            "Decision Trees are easy to interpret and capture non-linear relationships. "
+            "They can overfit on small datasets but are powerful for exploratory analysis."
+        )
+    elif "Neural Network" in algo_name or "MLP" in algo_name:
+        explanation = (
+            "Neural Networks (MLPs) can model highly complex relationships but require large datasets "
+            "and longer training time. They excel in large-scale predictive tasks."
+        )
     else:
-        goal = "predicting a number (like a price or a score)."
+        explanation = "This algorithm is recommended based on your dataset size and target type."
 
-    # Part 2: Explain the choice based on dataset size and algorithm
-    if "Logistic Regression" in algorithm:
-        explanation = f"Your dataset is relatively small, and your goal is {goal} For this kind of task, **Logistic Regression** is a straightforward and reliable model that often gives great results."
-    
-    elif "Linear Regression" in algorithm:
-        explanation = f"Your dataset is relatively small, and your goal is {goal} For this kind of task, **Linear Regression** is a classic and effective model for finding relationships in your data."
-
-    elif "Random Forest" in algorithm:
-        explanation = f"Your dataset is quite large, and your goal is {goal} To handle this much data effectively, **Random Forest** is a powerful model that combines many decision trees to make a strong prediction."
-
-    elif "XGBoost" in algorithm:
-        explanation = f"Your dataset is quite large, and your goal is {goal} For a large-scale task like this, **XGBoost** is a highly efficient and powerful model known for its top-tier performance."
-
-    # Part 3: Add a note about imbalance if needed
     if is_imbalanced:
-        explanation += " We also recommend using a **Sampling Technique** because some of your categories have far fewer examples than others, and this helps the model learn fairly."
+        explanation += " Since class imbalance was detected, sampling or weighting techniques should be applied."
 
     return explanation

@@ -43,14 +43,9 @@ else:
 
     # Recommended Algorithm
     if "recommendation" in st.session_state:
-        rec = st.session_state.recommendation
-        st.subheader("🎯 Recommended Algorithm")
-        st.markdown(f"**Algorithm:** {rec['algorithm']}")
-        st.markdown(f"**Justification:** {rec['simple_explanation']}")
+        rec_data = st.session_state.recommendation
 
-        with st.expander("Show technical details"):
-            for reason in rec["reason_parts"]:
-                st.write(f"- {reason}")
+        st.subheader("🎯 Recommended Algorithm")
 
         # Class Distribution Pie Chart (only for categorical target)
         class_plot_path = None
