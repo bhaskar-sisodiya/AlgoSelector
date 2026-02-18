@@ -1,4 +1,4 @@
-# Home.py
+# ml-logic/Home.py
 
 import streamlit as st
 from utils.file_ops.csv_loader import load_csv

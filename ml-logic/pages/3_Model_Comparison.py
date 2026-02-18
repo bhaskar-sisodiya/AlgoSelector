@@ -1,4 +1,4 @@
-# pages/3_Model_Comparison.py
+# ml-logic/pages/3_Model_Comparison.py
 
 import streamlit as st
 import pandas as pd
