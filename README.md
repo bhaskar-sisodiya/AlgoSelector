@@ -43,11 +43,22 @@ The backend requires a PostgreSQL database (Supabase recommended).
    cp .env.example .env
    ```
 3. Update `.env` with your credentials (database URL, secret keys).
-4. Install dependencies:
+4. Create and activate a virtual environment:
+   ```bash
+   # Create venv
+   python -m venv venv
+
+   # Activate (Windows)
+   .\venv\Scripts\activate
+
+   # Activate (macOS/Linux)
+   source venv/bin/activate
+   ```
+5. Install dependencies:
    ```bash
    pip install -r ../requirements.txt
    ```
-5. Start the backend:
+6. Start the backend:
    ```bash
    uvicorn main:app --reload
    ```
