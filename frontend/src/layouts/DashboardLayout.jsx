@@ -9,7 +9,7 @@ const DashboardLayout = () => {
   // Default collapsed on mobile
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-base-200 text-base-content relative overflow-x-hidden">
 
       <TopNavbar />
 

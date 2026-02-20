@@ -26,6 +26,7 @@ import Preprocessing from "./pages/dashboard/Preprocessing";
 import MetaInsights from "./pages/dashboard/MetaInsights";
 import Explainability from "./pages/dashboard/Explainability";
 import Monitoring from "./pages/dashboard/Monitoring";
+import AlgorithmSelection from "./pages/dashboard/AlgorithmSelection";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,7 @@ const App = () => {
               <Route path="insights" element={<MetaInsights />} />
               <Route path="explainability" element={<Explainability />} />
               <Route path="monitoring" element={<Monitoring />} />
+              <Route path="algorithms" element={<AlgorithmSelection />} />
             </Route>
 
             {/* Fallback for 404s */}

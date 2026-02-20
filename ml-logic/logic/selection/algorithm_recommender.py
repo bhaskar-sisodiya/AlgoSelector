@@ -35,57 +35,73 @@ def recommend_algorithm(df, target_column, imbalance_ratio):
     simple_explanation = get_explanation(base_algo, task_type, n_rows, is_imbalanced)
 
     # ✅ Enhanced secondary recommendations
+    # ✅ Enhanced secondary recommendations (Limited to Top 3)
     if task_type == "classification":
-        recommendations = [
-            {
-                "name": "Random Forest",
-                "best_for": (
-                    "Suitable for both small and large datasets. "
-                    "Performs well with mixed feature types and handles missing values gracefully. "
-                    "Useful when you want accuracy and stability without much tuning."
-                )
-            },
-            {
-                "name": "XGBoost",
-                "best_for": (
-                    "Excellent for complex datasets with many features. "
-                    "Uses gradient boosting to capture subtle patterns and achieve high accuracy. "
-                    "Ideal when you can afford slightly longer training times."
-                )
-            },
-            {
-                "name": "Logistic Regression",
-                "best_for": (
-                    "Provides interpretable results and works well on smaller datasets. "
-                    "Helps understand feature influence and is easy to train and explain."
-                )
-            }
-        ]
+        if n_rows < 1000:
+            # Small Data: Prioritize simpler, low-overhead models
+            recommendations = [
+                {
+                    "name": "Logistic Regression",
+                    "best_for": "Provides interpretable results and works well on smaller datasets."
+                },
+                {
+                    "name": "SVM",
+                    "best_for": "Effective in high-dimensional spaces and best for smaller, complex datasets."
+                },
+                {
+                    "name": "Decision Tree",
+                    "best_for": "Simple, interpretable model that mimics human decision-making."
+                }
+            ]
+        else:
+            # Large Data: Prioritize robust ensemble methods
+            recommendations = [
+                {
+                    "name": "Random Forest",
+                    "best_for": "Suitable for large datasets, handles mixed features, and provides stability."
+                },
+                {
+                    "name": "XGBoost",
+                    "best_for": "Excellent for complex datasets, offering top-tier accuracy via gradient boosting."
+                },
+                {
+                    "name": "Logistic Regression",
+                    "best_for": "Included as a fast, interpretable baseline for comparison."
+                }
+            ]
     else:
-        recommendations = [
-            {
-                "name": "Linear Regression",
-                "best_for": (
-                    "Performs best when relationships between variables are roughly linear. "
-                    "Simple, transparent, and efficient for smaller datasets."
-                )
-            },
-            {
-                "name": "Random Forest Regressor",
-                "best_for": (
-                    "Captures nonlinear relationships and interactions automatically. "
-                    "Great when your data has complex patterns or missing values."
-                )
-            },
-            {
-                "name": "XGBoost Regressor",
-                "best_for": (
-                    "Highly optimized boosting algorithm that offers top-tier performance "
-                    "on large and high-dimensional datasets. "
-                    "Balances accuracy and efficiency effectively."
-                )
-            }
-        ]
+        if n_rows < 1000:
+            # Small Data (Regression)
+            recommendations = [
+                {
+                    "name": "Linear Regression",
+                    "best_for": "Simple, transparent, and efficient for smaller datasets with linear trends."
+                },
+                {
+                    "name": "SVR",
+                    "best_for": "Robust to outliers and effective in high-dimensional spaces."
+                },
+                {
+                    "name": "Decision Tree Regressor",
+                    "best_for": "Fast and interpretable, splitting data into segments."
+                }
+            ]
+        else:
+            # Large Data (Regression)
+            recommendations = [
+                {
+                    "name": "XGBoost Regressor",
+                    "best_for": "Highly optimized boosting for large, high-dimensional datasets."
+                },
+                {
+                    "name": "Random Forest Regressor",
+                    "best_for": "Captures nonlinear relationships and interactions automatically."
+                },
+                {
+                    "name": "Linear Regression",
+                    "best_for": "Included as a fast, interpretable baseline for comparison."
+                }
+            ]
 
     # ✅ Return consistent structure
     return {

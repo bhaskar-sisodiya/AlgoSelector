@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 import pandas as pd
+import numpy as np
 import os
 import uuid
 
@@ -38,7 +39,9 @@ async def upload_csv(file: UploadFile = File(...)):
     try:
         df = pd.read_csv(file_path)
     except Exception as e:
-        os.remove(file_path)
+        # cleanup if failed
+        if os.path.exists(file_path):
+            os.remove(file_path)
         raise HTTPException(status_code=400, detail=f"Invalid CSV file: {str(e)}")
 
     # Auto-detect categorical columns
@@ -48,6 +51,13 @@ async def upload_csv(file: UploadFile = File(...)):
 
     # Suggest target column
     suggested_target = suggest_target_column(df)
+
+    # ---------------------------------------------------------
+    # 🔥 Fix: Sanitize DataFrame for JSON Serialization
+    # Replace Infinity with NaN, then NaN with None (which becomes null in JSON)
+    # ---------------------------------------------------------
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    df = df.where(pd.notnull(df), None)
 
     # Return structured response
     return {

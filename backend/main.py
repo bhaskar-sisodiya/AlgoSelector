@@ -13,6 +13,7 @@ sys.path.append(
         os.path.join(os.path.dirname(__file__), "..", "ml-logic")
     )
 )
+sys.path.append(os.path.dirname(os.path.abspath(__file__))) # Add backend to path
 
 # Database
 from database.database import engine
@@ -45,6 +46,10 @@ app.include_router(upload.router)
 app.include_router(profiling.router)
 app.include_router(preprocess.router)
 app.include_router(recommendation.router)
+from routes import automl, monitoring, report
+app.include_router(automl.router)
+app.include_router(monitoring.router)
+app.include_router(report.router)
 
 
 @app.get("/")

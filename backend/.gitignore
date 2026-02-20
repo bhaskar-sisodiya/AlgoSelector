@@ -56,3 +56,6 @@ media/
 # Docker
 *.dockerfile
 docker-compose.override.yml
+# Temporary output files
+shap_output_v*.txt
+shap_output.txt

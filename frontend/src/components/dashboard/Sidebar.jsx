@@ -23,7 +23,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
   const menuItems = [
     { icon: FaDatabase, label: "Dataset Upload", path: "/dashboard/upload" },
     { icon: FaCogs, label: "Preprocessing", path: "/dashboard/preprocessing" },
-    { icon: FaBrain, label: "Algorithm Selection", path: "/dashboard" }, 
+    { icon: FaBrain, label: "Algorithm Selection", path: "/dashboard/algorithms" }, 
     { icon: FaSearch, label: "Meta-Insights", path: "/dashboard/insights" },
     {
       icon: FaChartLine,
@@ -51,7 +51,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         initial={false}
         animate={{ width: isCollapsed ? 80 : 256 }}
         transition={{ duration: 0.3 }}
-        className="bg-gray-900 border-r border-white/10 
+        className="bg-base-100 border-r border-base-content/10 
               h-[calc(100vh-4rem)] 
               flex flex-col 
               transition-all duration-300"
@@ -79,7 +79,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 className={`flex items-center gap-4 w-full p-3 rounded-xl transition-all group relative ${
                   isActive
                     ? "bg-primary/20 text-primary border border-primary/30"
-                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                    : "text-base-content/70 hover:bg-base-200 hover:text-base-content"
                 }`}
               >
                 <div className="text-xl shrink-0">
@@ -108,16 +108,16 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
         </div>
 
         {/* 3. Bottom Section: System Status & Profile */}
-        <div className="p-4 border-t border-white/10 space-y-4 bg-black/20">
+        <div className="p-4 border-t border-base-content/10 space-y-4 bg-base-200/50">
           {/* System Status */}
           <div
-            className={`rounded-xl border border-white/5 ${isCollapsed ? "p-2 flex justify-center bg-green-900/20" : "p-3 bg-gradient-to-br from-primary/10 to-purple-900/20"}`}
+            className={`rounded-xl border border-base-content/5 ${isCollapsed ? "p-2 flex justify-center bg-green-900/20" : "p-3 bg-gradient-to-br from-primary/10 to-purple-900/20"}`}
           >
             {isCollapsed ? (
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]" />
             ) : (
               <>
-                <h4 className="text-[10px] font-bold text-gray-400 uppercase mb-2">
+                <h4 className="text-[10px] font-bold text-base-content/60 uppercase mb-2">
                   System Status
                 </h4>
                 <div className="flex items-center gap-2 text-green-400 text-xs font-mono">
@@ -145,13 +145,13 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
               <span
                 className="absolute bottom-0 right-0 
                       w-3 h-3 bg-green-500 
-                      rounded-full border-2 border-gray-900"
+                      rounded-full border-2 border-base-100"
               />
             </motion.div>
 
             {!isCollapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-white truncate">
+                <p className="text-sm font-semibold text-base-content truncate">
                   Bhaskar S.
                 </p>
                 <p className="text-xs text-primary font-medium">Pro Plan</p>
@@ -165,7 +165,7 @@ const Sidebar = ({ isCollapsed, toggleSidebar }) => {
                 whileTap={{ scale: 0.9 }}
                 className="w-8 h-8 flex items-center justify-center 
                   rounded-lg hover:bg-red-500/10 
-                  text-gray-400 hover:text-red-400 
+                  text-base-content/60 hover:text-red-400 
                   transition-all"
               >
                 <FaSignOutAlt size={14} />

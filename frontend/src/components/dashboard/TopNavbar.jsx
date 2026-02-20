@@ -14,7 +14,7 @@ import { useTheme } from "../../context/ThemeContext"; // Import the hook
 
 const TopNavbar = () => {
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "luxury"; // Assuming 'luxury' is your dark theme
+  const isDark = theme === "dark" || theme === "luxury";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -120,16 +120,12 @@ const TopNavbar = () => {
             className={`absolute right-0 top-12 w-48 
                 rounded-xl shadow-2xl p-2 space-y-1 sm:hidden
                 border transition-all duration-200
-                ${
-                  isDark
-                    ? "bg-gray-900 border-white/10 text-white"
-                    : "bg-white border-gray-200 text-gray-800"
-                }`}
+                bg-base-100 border-base-content/10 text-base-content`}
           >
             <button
               className={`flex items-center gap-3 w-full px-3 py-2 
                   rounded-lg transition
-                  ${isDark ? "hover:bg-white/10" : "hover:bg-gray-100"}`}
+                  hover:bg-base-200`}
             >
               <FaBell size={14} />
               <span className="text-sm">Notifications</span>
@@ -139,7 +135,7 @@ const TopNavbar = () => {
               onClick={toggleTheme}
               className={`flex items-center gap-3 w-full px-3 py-2 
                   rounded-lg transition
-                  ${isDark ? "hover:bg-white/10" : "hover:bg-gray-100"}`}
+                  hover:bg-base-200`}
             >
               {isDark ? (
                 <FaMoon className="text-yellow-300 text-[10px]" />
